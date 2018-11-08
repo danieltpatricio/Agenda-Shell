@@ -5,10 +5,10 @@ function tl_receberNovoUsuario {
 }
 
 function tl_listarUsuarios {
-
+	
+	#aqui os valores da lista serão obtidos de um arquivo
 	valoresLista=""
 	
-	zenity --list --text=Contatos Cadastrados --column=Nome --column=Telefone $valoresLista
-
+	zenity --list --text='Contatos Cadastrados' --column=Nome --column=Telefone $valoresLista
 
 }
