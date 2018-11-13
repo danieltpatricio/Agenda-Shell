@@ -12,3 +12,15 @@ function tl_listarUsuarios {
 	zenity --list --text='Contatos Cadastrados' --column=Nome --column=Telefone $valoresLista
 
 }
+
+function valida_entrada {
+	#verifica se foi recebido valores por parametro
+	#busca apenas as ocorrencias de '|'  e conta quantas existem
+	_nome=`echo $1 | grep -o '|' | wc -l `
+
+	if [ $_nome -eq 1 ]
+	then
+		echo $1 >> contatos
+	fi
+	
+}
