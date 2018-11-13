@@ -22,5 +22,6 @@ function valida_entrada {
 	then
 		echo $1 >> contatos
 	fi
-	
+	#caso não esteja valido: retornar falso para que a função
+	#que o chamou solicite novamente a inserção dos dados
 }
