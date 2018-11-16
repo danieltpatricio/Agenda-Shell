@@ -1,3 +1,13 @@
+################################
+#
+#	Autor: Allan Neri
+#	Descrição: Funções uteis para trabalhar com telas 
+#	que o usuário irá interagir com o sistema.
+#
+#
+################################
+
+
 function tl_receberNovoUsuario {
 
 	saida=`zenity --forms --add-entry=Nome --add-entry=Telefone --title=Cadastrar --text=`;
@@ -33,4 +43,16 @@ function valida_entrada {
 	#caso não esteja valido: retornar falso para que a função
 	#que o chamou solicite novamente a inserção dos dados
 	
+}
+
+function tela_principal {
+	
+	#utilizar estas variaveis para verificar a entrada selecionada
+	lstContato="Contatos Cadastrados"
+	addContato="Adicionar Contato"
+	delContato="Excluir Contato"
+	sair="Sair"
+	
+	zenity --info --no-wrap --extra-button=$lstContato --ok-label=$addContato --extra-button=$delContato --extra-button=$sair
+
 }
