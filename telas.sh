@@ -44,6 +44,21 @@ function valida_entrada {
 	fi
 }
 
+function tl_delContato {
+	
+	tl_listarUsuarios
+
+	if [[ $? -eq 1 ]] # clicou no botão cancelar
+	then
+		tela_principal
+	fi
+
+	usr_selecionado=$?
+
+
+
+}
+
 function tela_principal {
 	
 	#utilizar estas variaveis para verificar a entrada selecionada
@@ -57,16 +72,24 @@ function tela_principal {
 	# existe diferença no uso de '[' e '[[' (ver link no readme)
 	if [[ $?==$lstContato ]] 
 	then
+
 		tl_listarUsuarios
+
 	elif [[ $?==$addContato ]] 
 	then
+
 		tl_receberNovoUsuario
+
 	elif [[ $?==$delContato ]] 
 	then
+	
 		tl_delContato
+		
 	elif [[ $?==$sair ]]
 	then
+	
 		exit 0
+		
 	fi
 
 }
