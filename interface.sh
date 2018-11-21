@@ -1,20 +1,21 @@
 ################################
 #
-#	Autor: Allan Neri
+#	Autor: Allan Neri (Daniel refatoração)
 #	Descrição: Funções uteis para trabalhar com telas 
 #	que o usuário irá interagir com o sistema.
 #
 #
 ################################
 
+# importar agendapi
 
-function tl_receberNovoUsuario {
+function tela_receberNovoUsuario {
 
 	saida=`zenity --forms --add-entry=Nome --add-entry=Telefone --title=Cadastrar --text=`;
 
 }
 
-function tl_listarUsuarios {
+function tela_listarUsuarios {
 	
 	#aqui os valores da lista serão obtidos de um arquivo
 	valoresLista=""
@@ -26,9 +27,9 @@ function tl_listarUsuarios {
 function valida_entrada {
 	#verifica se foi recebido valores por parametro
 	if [ $# -eq 0  ]
-	then
-		echo "Nenhuma entrada foi dada para ser valiadada"
-
+		then
+			echo "Nenhuma entrada foi dada para ser valiadada"
+	fi
 	#busca apenas as ocorrencias de '|'  e conta quantas existem
 	_nome=`echo $1 | grep -o '|' | wc -l `
 
@@ -93,3 +94,4 @@ function tela_principal {
 	fi
 
 }
+tela_principal
