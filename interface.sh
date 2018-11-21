@@ -33,17 +33,31 @@ function valida_entrada {
 	#busca apenas as ocorrencias de '|'  e conta quantas existem
 	_nome=`echo $1 | grep -o '|' | wc -l `
 
-	if [ $_nome -eq 1 ]
-		then
-			echo $1 >> contatos
-			return 1
-	else
-		return 0
-		# indica que existe '|' na entrada
-	fi
 	#caso não esteja valido: retornar falso para que a função
 	#que o chamou solicite novamente a inserção dos dados
+		if [[ $_nome -eq 1 ]]; then
+			echo $1 >> contatos
+			return 1
+		else
+			return 0
+			# indica que existe '|' na entrada
+		fi
+	fi
+}
+
+function tl_delContato {
 	
+	tl_listarUsuarios
+
+	if [[ $? -eq 1 ]] # clicou no botão cancelar
+	then
+		tela_principal
+	fi
+
+	usr_selecionado=$?
+
+
+
 }
 
 function tela_principal {
@@ -55,6 +69,29 @@ function tela_principal {
 	sair="Sair"
 	
 	zenity --info --no-wrap --extra-button=$lstContato --ok-label=$addContato --extra-button=$delContato --extra-button=$sair
+
+	# existe diferença no uso de '[' e '[[' (ver link no readme)
+	if [[ $?==$lstContato ]] 
+	then
+
+		tl_listarUsuarios
+
+	elif [[ $?==$addContato ]] 
+	then
+
+		tl_receberNovoUsuario
+
+	elif [[ $?==$delContato ]] 
+	then
+	
+		tl_delContato
+		
+	elif [[ $?==$sair ]]
+	then
+	
+		exit 0
+		
+	fi
 
 }
 tela_principal
