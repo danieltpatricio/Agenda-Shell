@@ -20,11 +20,13 @@ function tela_listarUsuarios {
 	
 	#aqui os valores da lista serão obtidos de um arquivo
 	valoresLista=""
-	if [[ -n $1 ]]
+	if [[ -z $1 ]]
 	then
-
+		tituloPagina="Contatos Cadastrados"
+	else
+		tituloPagina=$1
 	fi
-	zenity --list --text='Contatos Cadastrados' --column=Nome --column=Telefone $valoresLista
+	zenity --list --text="$tituloPagina" --column=Nome --column=Telefone $valoresLista
 
 }
 
@@ -51,7 +53,7 @@ function valida_entrada {
 
 function tela_delContato {
 	
-	tela_listarUsuarios
+	tela_listarUsuarios "Selecione Usuário para Excluir"
 
 	if [[ $? -eq 1 ]] # clicou no botão cancelar
 	then
@@ -72,6 +74,7 @@ function tela_principal {
 	
 	
 	retorno=$(zenity --list --column=opcoes --text=Lista "$lstContato" "$addContato" "$delContato" "$sair")
+	#retorno=`zenity --info --no-wrap --extra-button=$lstContato --extra-button=$addContato --extra-button=$delContato --extra-button=$sair`;
 
 	case $retorno in
 		$lstContato )
