@@ -1,3 +1,4 @@
+#!/bin/bash
 ################################
 #
 #	Autor: Allan Neri (Daniel refatoração)
@@ -9,18 +10,37 @@
 
 # importar agendapi
 
-function tela_receberNovoUsuario {
+function tela_addUsuario {
 
-	saida=`zenity --forms --add-entry=Nome --add-entry=Telefone --title=Cadastrar --text=`;
+	zenity --forms --title="Adicionar Contato:" \
+	--text="Preencha os dados do seu contato." \
+	--separator="," \
+	--add-entry="Nome:" \
+	--add-entry="Telefone:" >> Agenda.csv
+	case $? in
+		0)
+			echo "Contato Adicionado."
+			;;
+		1)
+			echo "Contato cancelado."
+			;;
+		-1)
+			echo "Erro ao cadastrar contato."
+			;;
+	esac
+	tela_principal
 
 }
 
 function tela_listarUsuarios {
-	
-	#aqui os valores da lista serão obtidos de um arquivo
-	valoresLista=""
-	
-	zenity --list --text='Contatos Cadastrados' --column=Nome --column=Telefone $valoresLista
+	echo "entrou"
+	# #aqui os valores da lista serão obtidos de um arquivo
+	# valoresLista=""
+	# if [[ -n $1 ]]
+	# then
+
+	# fi
+	# zenity --list --text='Contatos Cadastrados' --column=Nome --column=Telefone $valoresLista
 
 }
 
@@ -35,19 +55,19 @@ function valida_entrada {
 
 	#caso não esteja valido: retornar falso para que a função
 	#que o chamou solicite novamente a inserção dos dados
-		if [[ $_nome -eq 1 ]]; then
-			echo $1 >> contatos
-			return 1
-		else
-			return 0
-			# indica que existe '|' na entrada
-		fi
+	if [[ $_nome -eq 1 ]]; then
+		echo $1 >> contatos
+		return 1
+	else
+		return 0
+		# indica que existe '|' na entrada
 	fi
+	
 }
 
-function tl_delContato {
+function tela_delContato {
 	
-	tl_listarUsuarios
+	tela_listarUsuarios
 
 	if [[ $? -eq 1 ]] # clicou no botão cancelar
 	then
@@ -55,8 +75,6 @@ function tl_delContato {
 	fi
 
 	usr_selecionado=$?
-
-
 
 }
 
@@ -68,30 +86,21 @@ function tela_principal {
 	delContato="Excluir Contato"
 	sair="Sair"
 	
-	zenity --info --no-wrap --extra-button=$lstContato --ok-label=$addContato --extra-button=$delContato --extra-button=$sair
-
-	# existe diferença no uso de '[' e '[[' (ver link no readme)
-	if [[ $?==$lstContato ]] 
-	then
-
-		tl_listarUsuarios
-
-	elif [[ $?==$addContato ]] 
-	then
-
-		tl_receberNovoUsuario
-
-	elif [[ $?==$delContato ]] 
-	then
 	
-		tl_delContato
-		
-	elif [[ $?==$sair ]]
+	retorno=`zenity --info --text=Lista --ok-label="$lstContato" --extra-button="$addContato" --extra-button="$delContato" --extra-button="$sair"`;
+	if [[ $? == 0 ]] 
 	then
-	
-		exit 0
-		
+		tela_listarUsuarios
 	fi
-
+	case $retorno in
+		$addContato )
+			tela_receberNovoUsuario
+		;;
+		$delContato )
+			tela_delContato
+		;;
+		$sair )
+			exit 1
+		;;
+	esac
 }
-tela_principal
