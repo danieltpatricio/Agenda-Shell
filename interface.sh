@@ -10,9 +10,25 @@
 
 # importar agendapi
 
-function tela_receberNovoUsuario {
+function tela_addUsuario {
 
-	saida=`zenity --forms --add-entry=Nome --add-entry=Telefone --title=Cadastrar --text=`;
+	zenity --forms --title="Adicionar Contato:" \
+	--text="Preencha os dados do seu contato." \
+	--separator="," \
+	--add-entry="Nome:" \
+	--add-entry="Telefone:" >> Agenda.csv
+	case $? in
+		0)
+			echo "Contato Adicionado."
+			;;
+		1)
+			echo "Contato cancelado."
+			;;
+		-1)
+			echo "Erro ao cadastrar contato."
+			;;
+	esac
+	tela_principal
 
 }
 
