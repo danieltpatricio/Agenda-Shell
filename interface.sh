@@ -1,3 +1,4 @@
+#!/bin/bash
 ################################
 #
 #	Autor: Allan Neri (Daniel refatoração)
@@ -19,7 +20,10 @@ function tela_listarUsuarios {
 	
 	#aqui os valores da lista serão obtidos de um arquivo
 	valoresLista=""
-	
+	if [[ -n $1 ]]
+	then
+
+	fi
 	zenity --list --text='Contatos Cadastrados' --column=Nome --column=Telefone $valoresLista
 
 }
@@ -66,29 +70,28 @@ function tela_principal {
 	delContato="Excluir Contato"
 	sair="Sair"
 	
-	retorno=`zenity --info --no-wrap --extra-button=$lstContato --ok-label=$addContato --extra-button=$delContato --extra-button=$sair`;
-	echo "sadf" $retorno
-	# existe diferença no uso de '[' e '[[' (ver link no readme)
-	if [[ $retorno==$lstContato ]] 
-	then
-		
-		tela_listarUsuarios
-
-	elif [[ $retorno==$addContato ]] 
-	then
-
-		tela_receberNovoUsuario
-
-	elif [[ $retorno==$delContato ]] 
-	then
 	
-		tela_delContato
-		
-	elif [[ $retorno==$sair ]]
-	then
-		
-		exit 1
-		
-	fi
+	retorno=$(zenity --list --column=opcoes --text=Lista "$lstContato" "$addContato" "$delContato" "$sair")
 
+	case $retorno in
+		$lstContato )
+			tela_listarUsuarios
+			exit 1
+		;;
+		$addContato )
+			tela_receberNovoUsuario
+			exit 1
+		;;
+		$delContato )
+			tela_delContato
+			exit 1
+		;;
+		$sair )
+			
+			exit 1
+		;;
+		* )
+			echo não deu nada
+		;;
+	esac
 }
