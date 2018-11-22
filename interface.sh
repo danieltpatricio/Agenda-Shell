@@ -9,6 +9,7 @@
 ################################
 
 # importar agendapi
+file=Agenda.csv
 
 function tela_addUsuario {
 
@@ -16,7 +17,7 @@ function tela_addUsuario {
 	--text="Preencha os dados do seu contato." \
 	--separator="," \
 	--add-entry="Nome:" \
-	--add-entry="Telefone:" >> Agenda.csv
+	--add-entry="Telefone:" >> $file
 	case $? in
 		0)
 			echo "Contato Adicionado."
@@ -58,7 +59,7 @@ function valida_entrada {
 	#caso não esteja valido: retornar falso para que a função
 	#que o chamou solicite novamente a inserção dos dados
 	if [[ $_nome -eq 1 ]]; then
-		echo $1 >> contatos
+		echo $1 >> Agenda.csv
 		return 1
 	else
 		return 0
@@ -106,3 +107,4 @@ function tela_principal {
 		;;
 	esac
 }
+tela_addUsuario
