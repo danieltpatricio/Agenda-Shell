@@ -10,9 +10,25 @@
 
 # importar agendapi
 
-function tela_receberNovoUsuario {
+function tela_addUsuario {
 
-	saida=`zenity --forms --add-entry=Nome --add-entry=Telefone --title=Cadastrar --text=`;
+	zenity --forms --title="Adicionar Contato:" \
+	--text="Preencha os dados do seu contato." \
+	--separator="," \
+	--add-entry="Nome:" \
+	--add-entry="Telefone:" >> Agenda.csv
+	case $? in
+		0)
+			echo "Contato Adicionado."
+			;;
+		1)
+			echo "Contato cancelado."
+			;;
+		-1)
+			echo "Erro ao cadastrar contato."
+			;;
+	esac
+	tela_principal
 
 }
 
@@ -73,28 +89,20 @@ function tela_principal {
 	sair="Sair"
 	
 	
-	retorno=$(zenity --list --column=opcoes --text=Lista "$lstContato" "$addContato" "$delContato" "$sair")
-	#retorno=`zenity --info --no-wrap --extra-button=$lstContato --extra-button=$addContato --extra-button=$delContato --extra-button=$sair`;
-
+	retorno=`zenity --info --text=Lista --ok-label="$lstContato" --extra-button="$addContato" --extra-button="$delContato" --extra-button="$sair"`;
+	if [[ $? == 0 ]] 
+	then
+		tela_listarUsuarios
+	fi
 	case $retorno in
-		$lstContato )
-			tela_listarUsuarios
-			exit 1
-		;;
 		$addContato )
 			tela_receberNovoUsuario
-			exit 1
 		;;
 		$delContato )
 			tela_delContato
-			exit 1
 		;;
 		$sair )
-			
 			exit 1
-		;;
-		* )
-			echo não deu nada
 		;;
 	esac
 }
