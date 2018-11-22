@@ -35,19 +35,19 @@ function valida_entrada {
 
 	#caso não esteja valido: retornar falso para que a função
 	#que o chamou solicite novamente a inserção dos dados
-		if [[ $_nome -eq 1 ]]; then
-			echo $1 >> contatos
-			return 1
-		else
-			return 0
-			# indica que existe '|' na entrada
-		fi
+	if [[ $_nome -eq 1 ]]; then
+		echo $1 >> contatos
+		return 1
+	else
+		return 0
+		# indica que existe '|' na entrada
 	fi
+	
 }
 
-function tl_delContato {
+function tela_delContato {
 	
-	tl_listarUsuarios
+	tela_listarUsuarios
 
 	if [[ $? -eq 1 ]] # clicou no botão cancelar
 	then
@@ -55,8 +55,6 @@ function tl_delContato {
 	fi
 
 	usr_selecionado=$?
-
-
 
 }
 
@@ -68,30 +66,29 @@ function tela_principal {
 	delContato="Excluir Contato"
 	sair="Sair"
 	
-	zenity --info --no-wrap --extra-button=$lstContato --ok-label=$addContato --extra-button=$delContato --extra-button=$sair
-
+	retorno=`zenity --info --no-wrap --extra-button=$lstContato --ok-label=$addContato --extra-button=$delContato --extra-button=$sair`;
+	echo "sadf" $retorno
 	# existe diferença no uso de '[' e '[[' (ver link no readme)
-	if [[ $?==$lstContato ]] 
+	if [[ $retorno==$lstContato ]] 
 	then
-
-		tl_listarUsuarios
-
-	elif [[ $?==$addContato ]] 
-	then
-
-		tl_receberNovoUsuario
-
-	elif [[ $?==$delContato ]] 
-	then
-	
-		tl_delContato
 		
-	elif [[ $?==$sair ]]
+		tela_listarUsuarios
+
+	elif [[ $retorno==$addContato ]] 
+	then
+
+		tela_receberNovoUsuario
+
+	elif [[ $retorno==$delContato ]] 
 	then
 	
-		exit 0
+		tela_delContato
+		
+	elif [[ $retorno==$sair ]]
+	then
+		
+		exit 1
 		
 	fi
 
 }
-tela_principal
