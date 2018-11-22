@@ -17,14 +17,14 @@ function tela_receberNovoUsuario {
 }
 
 function tela_listarUsuarios {
-	
-	#aqui os valores da lista serão obtidos de um arquivo
-	valoresLista=""
-	if [[ -n $1 ]]
-	then
+	echo "entrou"
+	# #aqui os valores da lista serão obtidos de um arquivo
+	# valoresLista=""
+	# if [[ -n $1 ]]
+	# then
 
-	fi
-	zenity --list --text='Contatos Cadastrados' --column=Nome --column=Telefone $valoresLista
+	# fi
+	# zenity --list --text='Contatos Cadastrados' --column=Nome --column=Telefone $valoresLista
 
 }
 
@@ -71,27 +71,20 @@ function tela_principal {
 	sair="Sair"
 	
 	
-	retorno=$(zenity --list --column=opcoes --text=Lista "$lstContato" "$addContato" "$delContato" "$sair")
-
+	retorno=`zenity --info --text=Lista --ok-label="$lstContato" --extra-button="$addContato" --extra-button="$delContato" --extra-button="$sair"`;
+	if [[ $? == 0 ]] 
+	then
+		tela_listarUsuarios
+	fi
 	case $retorno in
-		$lstContato )
-			tela_listarUsuarios
-			exit 1
-		;;
 		$addContato )
 			tela_receberNovoUsuario
-			exit 1
 		;;
 		$delContato )
 			tela_delContato
-			exit 1
 		;;
 		$sair )
-			
 			exit 1
-		;;
-		* )
-			echo não deu nada
 		;;
 	esac
 }
