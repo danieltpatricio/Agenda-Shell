@@ -10,6 +10,7 @@
 
 # importar agendapi
 file=Agenda.csv
+delimitador=","
 
 function tela_addUsuario {
 
@@ -31,19 +32,24 @@ function tela_addUsuario {
 	esac
 	tela_principal
 
+
 }
 
 function tela_listarUsuarios {
 	
 	#aqui os valores da lista serão obtidos de um arquivo
-	valoresLista=""
+	valoresLista=`sort $file`
+
+	nomes=`echo "$valoresLista" | cut -d $delimitador -f 1`
+	telefones=`echo "$valoresLista" | cut -d $delimitador -f 2`
+
 	if [[ -z $1 ]]
 	then
 		tituloPagina="Contatos Cadastrados"
 	else
 		tituloPagina=$1
 	fi
-	zenity --list --text="$tituloPagina" --column=Nome --column=Telefone $valoresLista
+	zenity --list --text="$tituloPagina" --column=Nome "$nomes" --column=Telefone "$telefones"
 
 }
 
