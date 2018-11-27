@@ -1,7 +1,7 @@
 #!/bin/bash
 ################################
 #
-#	Autor: Allan Neri (Daniel refatoração)
+#	Autores: Allan Neri, Daniel Patrício
 #	Descrição: Funções uteis para trabalhar com telas 
 #	que o usuário irá interagir com o sistema.
 #
@@ -38,23 +38,21 @@ function tela_addUsuario {
 function tela_listarUsuarios {
 	
 	#aqui os valores da lista serão obtidos de um arquivo
-	valoresLista=`sort $file`
+	valoresLista=`cat $file | grep -v '^#' | sort `
 
 	nomes=$(echo -e "$valoresLista" | tr ',' ' ' )
 
-	if [[ -z $1 ]]
-	then
-		tituloPagina="Contatos Cadastrados"
-	else
-		tituloPagina=$1
-	fi
-
 	# Deve exibir apenas os valores que não possuem # no arquivo
-	#o caminho é esse:
-	# cat Agenda.csv | grep -e '^#'
+	#cat Agenda.csv | grep -v '^#'
 
-	selecionado=`zenity --list --text="$tituloPagina" $voltarBtn --column=Nome --column=Telefone $nomes`
+	selecionado=`zenity --list $voltarBtn --column=Nome --column=Telefone $nomes`
 	#tela_principal
+
+	case $1 in
+	 \-v )
+		tela_principal
+	;;
+	esac
 
 }
 
@@ -82,10 +80,10 @@ function valida_entrada {
 function tela_delContato {
 	
 	tela_listarUsuarios "Selecione Usuário para Excluir"
-
-	if [[ $? -eq 1 ]] # clicou no botão cancelar
+	echo $selecionado
+	if [[ $selecionado == '' ]] # clicou no botão cancelar
 	then
-		echo ola #tela_principal
+		tela_principal
 	fi
 
 	contato=`cat $file | grep "$selecionado"`
@@ -106,7 +104,7 @@ function tela_principal {
 	
 	if [[ $? == 0 ]] 
 	then
-		tela_listarUsuarios
+		tela_listarUsuarios -v
 	fi
 	
 	case $retorno in
