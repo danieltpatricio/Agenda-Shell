@@ -11,6 +11,7 @@
 # importar agendapi
 file=Agenda.csv
 delimitador=","
+voltarBtn='--cancel-label=Voltar'
 
 function tela_addUsuario {
 
@@ -18,7 +19,7 @@ function tela_addUsuario {
 	--text="Preencha os dados do seu contato." \
 	--separator="," \
 	--add-entry="Nome:" \
-	--add-entry="Telefone:" >> $file
+	--add-entry="Telefone:" $voltarBtn >> $file
 	case $? in
 		0)
 			echo "Contato Adicionado."
@@ -32,7 +33,6 @@ function tela_addUsuario {
 	esac
 	tela_principal
 
-
 }
 
 function tela_listarUsuarios {
@@ -40,8 +40,7 @@ function tela_listarUsuarios {
 	#aqui os valores da lista serão obtidos de um arquivo
 	valoresLista=`sort $file`
 
-	nomes=`echo "$valoresLista" | cut -d $delimitador -f 1`
-	telefones=`echo "$valoresLista" | cut -d $delimitador -f 2`
+	nomes=$(echo -e "$valoresLista" | tr ',' ' ' )
 
 	if [[ -z $1 ]]
 	then
@@ -49,7 +48,13 @@ function tela_listarUsuarios {
 	else
 		tituloPagina=$1
 	fi
-	zenity --list --text="$tituloPagina" --column=Nome "$nomes" --column=Telefone "$telefones"
+
+	# Deve exibir apenas os valores que não possuem # no arquivo
+	#o caminho é esse:
+	# cat Agenda.csv | grep -e '^#'
+
+	selecionado=`zenity --list --text="$tituloPagina" $voltarBtn --column=Nome --column=Telefone $nomes`
+	#tela_principal
 
 }
 
@@ -80,10 +85,12 @@ function tela_delContato {
 
 	if [[ $? -eq 1 ]] # clicou no botão cancelar
 	then
-		tela_principal
+		echo ola #tela_principal
 	fi
 
-	usr_selecionado=$?
+	contato=`cat $file | grep "$selecionado"`
+
+	sed -i 's/^'$contato'/'#$contato'/g' $file
 
 }
 
@@ -95,22 +102,24 @@ function tela_principal {
 	delContato="Excluir Contato"
 	sair="Sair"
 	
-	
 	retorno=`zenity --info --text=Lista --ok-label="$lstContato" --extra-button="$addContato" --extra-button="$delContato" --extra-button="$sair"`;
+	
 	if [[ $? == 0 ]] 
 	then
 		tela_listarUsuarios
 	fi
+	
 	case $retorno in
 		$addContato )
-			tela_receberNovoUsuario
+			tela_addUsuario
 		;;
 		$delContato )
 			tela_delContato
 		;;
 		$sair )
-			exit 1
+			exit 0
 		;;
 	esac
+
 }
-tela_addUsuario
+#tela_addUsuario
