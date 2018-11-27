@@ -80,7 +80,7 @@ function valida_entrada {
 function tela_delContato {
 	
 	tela_listarUsuarios "Selecione Usuário para Excluir"
-	echo $selecionado
+
 	if [[ $selecionado == '' ]] # clicou no botão cancelar
 	then
 		tela_principal
