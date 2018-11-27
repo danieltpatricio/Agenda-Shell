@@ -1,7 +1,7 @@
 #!/bin/bash
 ################################
 #
-#	Autor: Allan Neri (Daniel refatoração)
+#	Autores: Allan Neri, Daniel Patrício
 #	Descrição: Funções uteis para trabalhar com telas 
 #	que o usuário irá interagir com o sistema.
 #
@@ -10,6 +10,8 @@
 
 # importar agendapi
 file=Agenda.csv
+delimitador=","
+voltarBtn='--cancel-label=Voltar'
 
 function tela_addUsuario {
 
@@ -17,7 +19,7 @@ function tela_addUsuario {
 	--text="Preencha os dados do seu contato." \
 	--separator="," \
 	--add-entry="Nome:" \
-	--add-entry="Telefone:" >> $file
+	--add-entry="Telefone:" $voltarBtn >> $file
 	case $? in
 		0)
 			echo "Contato Adicionado."
@@ -36,14 +38,21 @@ function tela_addUsuario {
 function tela_listarUsuarios {
 	
 	#aqui os valores da lista serão obtidos de um arquivo
-	valoresLista=""
-	if [[ -z $1 ]]
-	then
-		tituloPagina="Contatos Cadastrados"
-	else
-		tituloPagina=$1
-	fi
-	zenity --list --text="$tituloPagina" --column=Nome --column=Telefone $valoresLista
+	valoresLista=`cat $file | grep -v '^#' | sort `
+
+	nomes=$(echo -e "$valoresLista" | tr ',' ' ' )
+
+	# Deve exibir apenas os valores que não possuem # no arquivo
+	#cat Agenda.csv | grep -v '^#'
+
+	selecionado=`zenity --list $voltarBtn --column=Nome --column=Telefone $nomes`
+	#tela_principal
+
+	case $1 in
+	 \-v )
+		tela_principal
+	;;
+	esac
 
 }
 
@@ -72,12 +81,14 @@ function tela_delContato {
 	
 	tela_listarUsuarios "Selecione Usuário para Excluir"
 
-	if [[ $? -eq 1 ]] # clicou no botão cancelar
+	if [[ $selecionado == '' ]] # clicou no botão cancelar
 	then
 		tela_principal
 	fi
 
-	usr_selecionado=$?
+	contato=`cat $file | grep "$selecionado"`
+
+	sed -i 's/^'$contato'/'#$contato'/g' $file
 
 }
 
@@ -89,22 +100,24 @@ function tela_principal {
 	delContato="Excluir Contato"
 	sair="Sair"
 	
-	
 	retorno=`zenity --info --text=Lista --ok-label="$lstContato" --extra-button="$addContato" --extra-button="$delContato" --extra-button="$sair"`;
+	
 	if [[ $? == 0 ]] 
 	then
-		tela_listarUsuarios
+		tela_listarUsuarios -v
 	fi
+	
 	case $retorno in
 		$addContato )
-			tela_receberNovoUsuario
+			tela_addUsuario
 		;;
 		$delContato )
 			tela_delContato
 		;;
 		$sair )
-			exit 1
+			exit 0
 		;;
 	esac
+
 }
-tela_addUsuario
+#tela_addUsuario
