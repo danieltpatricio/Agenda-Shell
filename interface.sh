@@ -40,6 +40,12 @@ function tela_listarUsuarios {
 	#aqui os valores da lista serão obtidos de um arquivo
 	valoresLista=`cat $file | grep -v '^#' | sort `
 
+
+	file='Agenda.csv'
+	while IFS='' read -r line || [[ -n "$line" ]]; do
+    	echo "Text read from file: $line"
+	done < "$1"
+
 	nomes=$(echo -e "$valoresLista" | tr ',' ' ' )
 
 	# Deve exibir apenas os valores que não possuem # no arquivo
@@ -121,3 +127,4 @@ function tela_principal {
 
 }
 #tela_addUsuario
+tela_principal
