@@ -88,7 +88,7 @@ function tela_delContato {
 
 	contato=`cat $file | grep "$selecionado"`
 
-	sed -i 's/^'$contato'/'#$contato'/g' $file
+	sed -i 's/^'$contato'/#$contato/g' $file
 
 }
 
@@ -120,4 +120,36 @@ function tela_principal {
 	esac
 
 }
-#tela_addUsuario
+
+senha=passwd
+function login {
+
+	if [[ $(grep -c ".*" passwd) == '1' ]];
+	then
+		__inserido=$(zenity --password --title="Crie uma senha")
+		echo -e "Senha \n"$__inserido > passwd
+		
+		zenity --info --text="Senha criada com sucesso!"
+	fi
+	senhaInserida=$(zenity --password)
+
+	if [[ $? -eq 1 ]]; then
+
+		login
+
+	else
+
+		echo $senhaInserida
+		senhaSalva=$(cat "$senha" | grep -o $senhaInserida)
+		if [[ "$senhaInserida" == "$senhaSalva" ]]; 
+		then 
+		
+			tela_principal
+		else 
+		
+			login
+		fi
+	fi
+
+}
+login
