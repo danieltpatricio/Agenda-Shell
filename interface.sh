@@ -1,11 +1,7 @@
 #!/bin/bash
 ################################
 #
-<<<<<<< HEAD
-#	Autor: Allan Neri (Daniel refatoração)
-=======
 #	Autores: Allan Neri, Daniel Patrício
->>>>>>> 15a0c2efe56ce7d664064dacb6c343e4bf32b4bd
 #	Descrição: Funções uteis para trabalhar com telas 
 #	que o usuário irá interagir com o sistema.
 #
@@ -14,11 +10,8 @@
 
 # importar agendapi
 file=Agenda.csv
-<<<<<<< HEAD
-=======
 delimitador=","
 voltarBtn='--cancel-label=Voltar'
->>>>>>> 15a0c2efe56ce7d664064dacb6c343e4bf32b4bd
 
 function tela_addUsuario {
 
@@ -26,11 +19,7 @@ function tela_addUsuario {
 	--text="Preencha os dados do seu contato." \
 	--separator="," \
 	--add-entry="Nome:" \
-<<<<<<< HEAD
-	--add-entry="Telefone:" >> $file
-=======
 	--add-entry="Telefone:" $voltarBtn >> $file
->>>>>>> 15a0c2efe56ce7d664064dacb6c343e4bf32b4bd
 	case $? in
 		0)
 			echo "Contato Adicionado."
@@ -49,16 +38,6 @@ function tela_addUsuario {
 function tela_listarUsuarios {
 	
 	#aqui os valores da lista serão obtidos de um arquivo
-<<<<<<< HEAD
-	valoresLista=""
-	if [[ -z $1 ]]
-	then
-		tituloPagina="Contatos Cadastrados"
-	else
-		tituloPagina=$1
-	fi
-	zenity --list --text="$tituloPagina" --column=Nome --column=Telefone $valoresLista
-=======
 	valoresLista=`cat $file | grep -v '^#' | sort `
 
 
@@ -80,7 +59,6 @@ function tela_listarUsuarios {
 		tela_principal
 	;;
 	esac
->>>>>>> 15a0c2efe56ce7d664064dacb6c343e4bf32b4bd
 
 }
 
@@ -109,22 +87,14 @@ function tela_delContato {
 	
 	tela_listarUsuarios "Selecione Usuário para Excluir"
 
-<<<<<<< HEAD
 	if [[ $? -eq 1 ]] # clicou no botão cancelar
-=======
-	if [[ $selecionado == '' ]] # clicou no botão cancelar
->>>>>>> 15a0c2efe56ce7d664064dacb6c343e4bf32b4bd
 	then
 		tela_principal
 	fi
 
-<<<<<<< HEAD
-	usr_selecionado=$?
-=======
 	contato=`cat $file | grep "$selecionado"`
 
 	sed -i 's/^'$contato'/'#$contato'/g' $file
->>>>>>> 15a0c2efe56ce7d664064dacb6c343e4bf32b4bd
 
 }
 
@@ -136,17 +106,6 @@ function tela_principal {
 	delContato="Excluir Contato"
 	sair="Sair"
 	
-<<<<<<< HEAD
-	
-	retorno=`zenity --info --text=Lista --ok-label="$lstContato" --extra-button="$addContato" --extra-button="$delContato" --extra-button="$sair"`;
-	if [[ $? == 0 ]] 
-	then
-		tela_listarUsuarios
-	fi
-	case $retorno in
-		$addContato )
-			tela_receberNovoUsuario
-=======
 	retorno=`zenity --info --text=Lista --ok-label="$lstContato" --extra-button="$addContato" --extra-button="$delContato" --extra-button="$sair"`;
 	
 	if [[ $? == 0 ]] 
@@ -157,19 +116,11 @@ function tela_principal {
 	case $retorno in
 		$addContato )
 			tela_addUsuario
->>>>>>> 15a0c2efe56ce7d664064dacb6c343e4bf32b4bd
 		;;
 		$delContato )
 			tela_delContato
 		;;
 		$sair )
-<<<<<<< HEAD
-			exit 1
-		;;
-	esac
-}
-tela_addUsuario
-=======
 			exit 0
 		;;
 	esac
@@ -177,4 +128,3 @@ tela_addUsuario
 }
 #tela_addUsuario
 tela_principal
->>>>>>> 15a0c2efe56ce7d664064dacb6c343e4bf32b4bd
