@@ -76,7 +76,7 @@ function tela_listarUsuarios {
 }
 
 function zerar_Arquivo {
-	zenity --question --text="Tem certeza que apagar os Contatos"
+	zenity --question --text="Tem certeza que apagar os Contatos?" $voltarBtn --ok-label="Sim"
 	if [[ $? -eq 1 ]] # clicou no botão cancelar
 	then
 		tela_principal
