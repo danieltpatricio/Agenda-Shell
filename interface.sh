@@ -35,10 +35,29 @@ function tela_addUsuario {
 
 }
 
+function tela_buscarUsuario {
+	retorno=`zenity --entry --text="Digite um nome e um numero :"`
+
+	if [[ $? -eq 1 ]] # clicou no botão cancelar
+	then
+		tela_principal
+	fi
+	contato=`cat $file | grep "$retorno"`
+	nome=$(echo $contato | cut -d',' -f 1)
+	numero=$(echo $contato | cut -d',' -f 2)
+
+	zenity --list --column=Nome $nome --column=Telefone  $numero
+}
+
 function tela_listarUsuarios {
 	
 	#aqui os valores da lista serão obtidos de um arquivo
 	valoresLista=`cat $file | grep -v '^#' | sort `
+
+
+	while IFS='' read -r line || [[ -n "$line" ]]; do
+    	echo "Text read from file: $line"
+	done < "$1"
 
 	nomes=$(echo -e "$valoresLista" | tr ',' ' ' )
 
@@ -54,6 +73,16 @@ function tela_listarUsuarios {
 	;;
 	esac
 
+}
+
+function zerar_Arquivo {
+	zenity --question --text="Tem certeza que apagar os Contatos?" $voltarBtn --ok-label="Sim"
+	if [[ $? -eq 1 ]] # clicou no botão cancelar
+	then
+		tela_principal
+	fi
+	echo "" > Agenda.csv
+	tela_principal
 }
 
 function valida_entrada {
@@ -81,14 +110,13 @@ function tela_delContato {
 	
 	tela_listarUsuarios "Selecione Usuário para Excluir"
 
-	if [[ $selecionado == '' ]] # clicou no botão cancelar
+	if [[ $? -eq 1 ]] # clicou no botão cancelar
 	then
 		tela_principal
 	fi
-
 	contato=`cat $file | grep "$selecionado"`
-
-	sed -i 's/^'$contato'/'#$contato'/g' $file
+	sed -i 's/^'$contato'/#$contato/g' '$file'
+	tela_principal
 
 }
 
@@ -97,10 +125,12 @@ function tela_principal {
 	#utilizar estas variaveis para verificar a entrada selecionada
 	lstContato="Contatos Cadastrados"
 	addContato="Adicionar Contato"
+	buscarContato="Buscar contato"
 	delContato="Excluir Contato"
 	sair="Sair"
+	zerarArquivo="Zerar Arquivo"
 	
-	retorno=`zenity --info --text=Lista --ok-label="$lstContato" --extra-button="$addContato" --extra-button="$delContato" --extra-button="$sair"`;
+	retorno=`zenity --info --text=Lista --ok-label="$lstContato" --extra-button="$addContato" --extra-button="$buscarContato" --extra-button="$delContato" --extra-button="$zerarArquivo" --extra-button="$sair"`;
 	
 	if [[ $? == 0 ]] 
 	then
@@ -111,6 +141,12 @@ function tela_principal {
 		$addContato )
 			tela_addUsuario
 		;;
+		$buscarContato )
+			tela_buscarUsuario
+		;;
+		$zerarArquivo )
+			zerar_Arquivo
+		;;
 		$delContato )
 			tela_delContato
 		;;
@@ -120,4 +156,5 @@ function tela_principal {
 	esac
 
 }
-#tela_addUsuario
+
+tela_principal
