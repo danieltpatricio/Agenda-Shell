@@ -23,23 +23,18 @@ This project is a contact agenda implemented in Shell script that meets the foll
 ## Installation
 
 1. Clone this repository to your local machine:
-git clone https://github.com/your-username/contact-agenda.git
+```bash
+$ git clone [https://github.com/your-username/contact-agenda.git](https://github.com/danieltpatricio/Agenda-Shell)
+```
 
 2. Navigate to the project directory:
+```bash
 cd contact-agenda
-
+```
 
 3. Run the main script using a shell command:
+```bash
 ./contact_agenda.sh
+```
 
 ## Usage
-
-Follow the on-screen prompts to interact with the contact agenda. You will be able to register, search, list, create a new file, and exit the agenda. Make sure to provide the correct password for access.
-
-## Contributing
-
-Contributions are welcome! If you want to contribute to this project, please follow the guidelines described in the CONTRIBUTING.md file.
-
-## License
-
-This project is licensed under the [License Name]. For more details, see the LICENSE.md file.
