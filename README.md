@@ -23,16 +23,19 @@ This project is a contact agenda implemented in Shell script that meets the foll
 ## Installation
 
 1. Clone this repository to your local machine:
+
 ```bash
-$ git clone [https://github.com/your-username/contact-agenda.git](https://github.com/danieltpatricio/Agenda-Shell)
+$ git clone https://github.com/danieltpatricio/Agenda-Shell
 ```
 
 2. Navigate to the project directory:
+
 ```bash
 cd contact-agenda
 ```
 
 3. Run the main script using a shell command:
+
 ```bash
 ./contact_agenda.sh
 ```
